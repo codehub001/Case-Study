@@ -1,0 +1,357 @@
+---
+tool-type: theia
+markdown-version: v1
+branch: lab-3643-instruction
+version-history-start-date: '2023-01-13T09:55:45Z'
+---
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/IDSNlogo.png" width="200/">
+
+::page{title="Working with IBM Cloudant"}
+Modern web applications require mechanisms for storage and retrieval of data that is not modeled as the tabular relationships that are used in relational databases. NoSQL databases are optimized for handling heavy workloads of concurrent reads and writes in the cloud. These workloads are typical of large, fast-growing web and mobile applications (apps).
+
+NoSQL databases are built from the ground up to scale globally, run non-stop, and handle a wide variety of data types, such as JavaScript Object Notation (JSON), full-text, and geospatial.
+
+This lab shows you how easy it is to create and deploy a web application with a database in IBM Cloud by using IBM Cloudant as an example of a NoSQL database. 
+
+::page{title="Learning Objectives"}
+After completing this exercise, you should be able to perform the following tasks:
+
+-   Create a starter Node.js application with a Cloudant DB service from a Node.js Cloudant Sample Git repository.
+-   Review the service environment variables.
+-   Explore the features of the Cloudant dashboard.
+-   Run the IBM Cloud application.
+-   Run the application and add data to the Cloudant database.
+-   Verify the data that is stored in the database from the Cloudant dashboard.
+
+::page{title="Prerequisites"}
+You must have an IBM Cloud account.
+
+::page{title="Step 1: Creating a Cloudant DB Instance"}
+
+1. Log in to your IBM Cloud account.
+
+2. From the IBM Cloud Dashboard page, click the **Catalog** tab. Search for **Cloudant** in the box provided and choose **Cloudant** as shown in the image below.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/1.1.png" alt="Cloudant tab" width="75%" style="border:solid #333 3px"> <br>
+
+3. A default name for your service instance is generated. *(You can change the service name, if required)*. Select the **IAM and legacy credentials** option from the available authentication methods and click **Create**, as shown in the next image.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/1.2.png" alt="Create Cloudant" width="75%" style="border:solid #333 3px"> <br> *Create Cloudant*
+
+::page{title="Step 2: Creating a Node.js application with a Cloudant DB service"}
+
+1. From the IBM Cloud Dashboard page, click the **Catalog** tab. Search for **Cloud Foundry** in the box provided and choose **Cloud Foundry** as shown in image below.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/1.3.png" alt="Cloud Foundry" width="75%" style="border:solid #333 3px"> <br>
+
+2. In the Cloud Foundry page, scroll down to **Application Runtime** and choose **SDK for Node.js**.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/1.4.png" alt="SDK for Node.js" width="75%" style="border:solid #333 3px"> <br>
+
+3. Choose your region and enter a unique name for the application. In the image below, the application name is **myFirstNodeCloudantApp**. Accept the defaults for the other fields and click **Create**.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/1.5.png" alt="Create Node.js Cloud Foundry Application" width="75%" style="border:solid #333 3px"> <br> 
+
+>**NOTE**: Wait until the application finishes staging and is running in IBM Cloud before you proceed to the next step. Look for the indication that your app is running.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/1.4.starting.png" alt="Create Node.js Cloud Foundry Application" width="75%" style="border:solid #333 3px">
+
+4. Enable the continuous delivery for your Node.js application from the Overview tab, as shown in the following image.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-7.png" alt="Enabling continuous delivery" width="75%" style="border:solid #333 3px"> <br>
+      
+
+5. In the **Continuos Delivery Toolchain** configuration window, change the source repository URL to *https://github.com/ibm-developer-skills-network/gihrp-nodejs_cloudant.git*.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-8.png" alt="Toolchain page" width="75%"> <br>
+
+6. In the same window, go to the **Delivery Pipeline Required** tab.You will be asked to create an IBM Cloud API Key for the Delivery Pipeline to automate continuous deliver and click on **New**
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-9.png" alt="Tool Integrations tile" width="75%"> <br>
+
+7. A new window comes up where you can enter the name of the API key and description and click on **Ok**
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-9a.png" alt="Tool Integrations tile" width="75%"> <br>
+*This generates a new IBM Cloud API key*
+
+8. Now click on **Create** for the Tool Chain to be created.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-9b.png" alt="Tool Integrations tile" width="75%"> <br>
+
+9. A new page opens, showing a set of tool integrations (THINK, CODE, and DELIVER) that support development, deployment, and operations tasks, as shown in the following image.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-10.png" alt="THINK, CODE, and DELIVER" width="75%"> <br> *THINK, CODE, and DELIVER*
+
+**Note:** Do not run the deploy stage explicitly under Delivery Pipeline.
+
+10. Go to the previous tab and click **Connections** on the left navigation bar, then click **Create Connection**. 
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/create_connection.png" alt="Create a connection" width="75%"> <br> 
+
+11. From the list of available applications, select the Cloudant instance you created earlier and click on **Next**.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/choose_cloudant.png" alt="Choose Cloudant" width="75%"> <br> 
+
+12. A window comes up alerting  *Restaging Required*. Click on **Connect**.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/restaging_warning.png" alt="Restage after connecting to the Cloudant service" width="75%"> <br>
+
+13. A message prompts you to restage the application so that it can use the Cloudant service. Click **Restage**. 
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/restage.png" alt="Restage after connecting to the Cloudant service" width="75%"> <br>
+
+The application restaging will take a couple of minutes. You should see the status next to the application name change from `Restaging` to `Running`.
+
+14. You will now see the cloudant service listed as a connection. 
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/connections.png" alt="Connections" width="75%"> <br>
+
+::page{title="Step 3: Reviewing the service environment variables"}
+
+Environment variables are created when services are added and bound to the application. If you are on the application page, you can skip step 1. If you are on the toolchain page, you can go back to the application page as follows:
+
+1. Click on the application name under `Connections` and go to the application page.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/gotoapplication.png" alt="Go to Application Page" width="75%"> <br> 
+
+2. From the application details page on IBM Cloud, click **Runtime** in the left navigation bar and then click **Environment variables**. Click on the the *eye* to see the default VCAP_SERVICES environment variable.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/showvcapservices.png" alt="VCAP_SERVICES environment variable" width="75%"> <br> 
+
+3. This lists the VCAP_SERVICES default values. Your app can access this information through the VCAP_SERVICES environment variable.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/vcapservices_variables.png" alt="VCAP_SERVICES environment variable" width="75%"> <br> 
+>**Note**: Cloud Foundry creates the environment variables VCAP_SERVICES, which is a stringified JSON object. JSON parsers can use the data in VCAP_SERVICES to extract information to connect to the service, such as user name, password, host name, and port number.
+
+::page{title="Step 4: Reviewing the starter application on the workstation - In this step, you review the application on DevOps"}
+
+1. Navigate to the **Continuous delivery** tile of your Node.js applicationâ€™s **Overview** page. Click **View toolchain**, as shown in the next image. 
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/1.8.png" alt="Viewing toolchain" width="75%"> <br> *Viewing toolchain*
+
+2. This opens the **Toolchains** tab of your application. Click **Eclipse Orion Web IDE**, as shown in the second image *IBM Cloud toolchain*.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-17.png" alt="IBM Cloud toolchain" width="75%"> <br> *IBM Cloud toolchain*
+
+3. To view the metadata relevant to the project, go to your application and click **package.json** to open it in the web editor, as shown in the next image.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-18.png" alt="Clicking package.json" width="75%"> <br> 
+
+4. In the left navigation pane, click **manifest.yml**.
+
+5. In the editor, update the content of the file to match the items shown in the following image, which specify the following:
+      -   Line 3: The unique application name you chose when you first created the application.
+      -   Line 7: Shows that the application has a Cloudant service that is bound to it. 
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-19.png" alt="The manifest.yml file contents" width="75%"> <br> *The manifest.yml file contents*
+
+6. In the server toolbar on the top, select **Create new launch configuration** from the drop-down list and click the **+** button to display the Edit Launch Configuration window, as shown in the next image. 
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-20.png" alt="Creating new launch configuration" width="75%"> <br> *Creating new launch configuration*
+
+7. When you save the configuration the application will be deployed. You can also explicitly deploy the application clicking on the play button. Once successfully deployed, it is green with status indicating the application is **running: normal**.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/deployopenapp.png" alt="Deploy and open App" width="75%"> <br> *Deploy and open app*
+
+8. Go to **Git** and commit your changes to your repository with an appropriate message.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/commitchangedfiles.png" alt="Deploy and open App" width="75%"> <br> *Commit the files with appropriate message*
+
+9. In the **Push** menu, choose **Push all** to push the changes so they are permenantly written to remote repository and to initiate the CI/CD pipeline.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/pushcommit.png" alt="Deploy and open App" width="75%"> <br> *Push the committed files*
+
+10. You can check if the Delivery pipeline has started and the status on the **Toolchain** page.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/checktoolchain.png" alt="Deploy and open App" width="75%"> <br> *Tool chain progress*
+
+11. Once the Toolchain runs successfully, **Delivery Pipeline** status will show  **Success**.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/deliverypipelinesuccess.png" alt="Deploy and open App" width="75%"> <br> *Tool chain Staus*
+
+<details><summary>To learn more, access the Cloudant documentation
+</summary>
+
+From another browser session, go to the following address:
+
+https://developer.ibm.com/clouddataservices/docs/cloudant/
+
+</details>   
+
+::page{title="Step 5: Running the IBM Cloud application"}
+
+1. In the **Application Details** page of your appliction, click **Overview** and then click **Visit App URL**, as shown in the next image.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-26.png" alt="Visit App URL" width="75%"> <br>
+
+2. The application is displayed in a new browser tab. Notice the *sample_doc* and the *A sample Document* labels. These two labels are the name-value pair that is stored in the Cloudant database.
+
+3. Click **Help**, as shown in the next image.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-27.png" alt="Help" width="75%"> <br> *Help*
+
+A new text box opens that describes how to add, edit, and delete categories to the application and the underlying Cloudant database.
+
+4. Click **ADD** to add a category.
+
+5. In the row that is added, type **plant** for the title and a description for the resource that you are adding (a picture for a tulip plant), as shown in the following image.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-28.png" alt="Title and description for a resource" width="75%"> <br> *Title and description for a resource*
+
+6. Click **Choose File**.
+
+7. Go to the file that you want to upload from your workstation. For example, you can choose any of the Windows sample pictures in *C:\Users\Public\Pictures\Sample Pictures*.<!--Sample pictures aren't available in Windows 10 unless they're online.-->
+   
+8. Click **Upload** to upload the file.
+
+The file is uploaded and stored on the Cloudant database, as shown in the next image.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-29.png" alt="Uploaded file" width="50%" height="50%"> <br> *Uploaded file*
+
+::page{title="Step 6: Exploring the features of the Cloudant Dashboard"}
+
+Explore the Cloudant database from the Cloudant Dashboard:
+
+1. Go back to application details window and click **Connections** in the left navigation pane.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/choose_cloudant_connection.png" alt="Cloudant" width="50%" height="50%"> <br>
+
+2. Click on your Cloudant instance to go to the Cloudant instance on the **Resources List** page and click on the Cloudant instance alias. 
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-30.png" alt="Cloudant" width="50%" height="50%"> <br>
+
+3. Click **LAUNCH DASHBOARD**, as shown in the next image.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/launchdashboard.png" alt="LAUNCH" width="50%" height="50%"> <br> *LAUNCH*
+
+4. The Cloudant Dashboard opens in a new browser tab. Click the **Database** icon in the left navigation bar. Note the database that is named **my_sample_db**, as shown in the following image.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-31.png" alt="The my_sample_db database" width="75%"> <br> *The my_sample_db database*
+
+You are now logged in to the Cloudant Dashboard with the default user that was generated when the Node.js application and Cloudant DB were created.
+
+::page{title="Step 7: View the data in the database:"}
+  
+1. Click **my_sample_db**. The page that opens displays all the documents in the database. Notice that there are two documents in the database, as in the next image.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-32.png" alt="The my_sample_db view" width="75%"> <br> *The my_sample_db view*
+
+<details><summary> More info </summary>
+
+>**Note** The fields *_id* and *_rev* are automatically generated and are used internally by the Cloudant database as key and revision number. A revision number is added to your documents by the server when you insert or modify them. You must specify latest *_rev* when updating a document or else your request fails and returns a 409 error. This helps avoid conflicting data states. The revision number is also used to confirm that a client is trying to modify the latest version of a document.
+</details>
+
+2. Click the first document. The document opens in the editor. You now see the all JSON name-value pairs for the document, as shown in the following image. You can also click on **View Attachments** to see if the data you uploaded is in Cloudant.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-33.png" alt="JSON name-value pairs for the document" width="75%"> <br> *JSON name-value pairs for the document*
+
+The document editor provides several options for modifying the JSON document. 
+   
+3. Change the value **A sample Document** to **Modified Sample Document** and click **Save Changes**. After the document is updated, the *_rev* value is updated automatically.
+
+4. In the next image, click **Options** (the wheel icon) in the top bar, then select **Include Docs** to view the contents of all documents. Click **Run Query**.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-34.png" alt="Run Query" width="75%"> <br> *Run Query*
+
+5. Click the document that was added last, as shown in the next image.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-35.png" alt="The plant document" width="75%"> <br> *The plant document*
+
+The details of the JSON document that is stored in the Cloudant database are shown in the following image.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-36.png" alt="JSON document details" width="75%"> <br> *JSON document details*
+
+6. Click **View Attachments** and select the file to display the contents of the attachment.
+
+7. Close the Cloudant Dashboard tab.
+
+::page{title="Step 8: Deleting your application"}
+
+In this step, you will delete your application:
+1. Open IBM Cloud Dashboard.
+2. Click the **Resource List** icon. Choose **Cloud Foundry Apps** and choose application name, (ideally, click **Stop**) and then **Delete**, as shown in the next image.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-52.png" alt="Delete App" width="75%"> <br> *Delete App*
+
+3. Confirm that you want to delete the application and its **associated services and routes**. Click **Delete**, as shown in the next image.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-53.png" alt="Delete action" width="75%"> <br> *Delete action*
+
+4. Choose **Services and Software** and choose Cloudant-ah (or whichever suffix you have) and click **Delete**, as shown in the next image. Confirm deletion in the prompt.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-54.png" alt="Delete action" width="75%"> <br> *Delete action*
+
+5. Perform the same deletion action with **Continuous Delivery** as well.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-55.png" alt="Delete action" width="75%"> <br> *Delete action*
+
+6. Choose **Developer Tools** and choose myFirstNodeCloudantApp and click **Delete**, as shown in the next image. Confirm deletion in the prompt.
+
+<img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork/labs/6_DataServices/images/3-56.png" alt="Delete action" width="75%"> <br> *Delete action*
+
+::page{title="Summary"}
+In this lab, you worked with the Node.js Cloudant Web Starter application from IBM Cloud boilerplates. You explored how a Node.js JavaScript application can access a Cloudant database. 
+
+::page{title="Next Steps"}
+In this lab you created a starter Node.js application with a Cloudant DB service from a Node.js Cloudant Sample Git repository. You then reviewed the service environment variables, accessed the Cloudant documentation, and explored the features of the Cloudant dashboard. You then ran the IBM Cloud application, added data to the Cloudant database, and verified the data stored in the database from the Cloudant dashboard. If you want to learn more about IBM Cloudant, see [IBM Cloudant](https://www.ibm.com/cloud/cloudant?utm_source=skills_network&utm_content=in_lab_content_link&utm_id=Lab-IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork) get a [free 1 GB trial](https://www.ibm.com/cloud/free?utm_source=skills_network&utm_content=in_lab_content_link&utm_id=Lab-IBMDeveloperSkillsNetwork-CD0201EN-SkillsNetwork). Also, see [IBM Cloudant - Learning Center](https://www.youtube.com/playlist?list=PLJa_sXrJUZb8FouDUo1KvZujd_icgaejg).
+
+::page{title="Changelog"}
+| Date | Version | Changed by | Change Description |
+|------|--------|--------|---------|
+|2023-05-10| 2.3 | Eric Hao & Vladislav Boyko | Updated Page Frames |
+|2023-05-10| 2.2 | Eric Hao & Vladislav Boyko | Updated Page Frames |
+|2023-05-10| 2.1 | Eric Hao & Vladislav Boyko | Updated Page Frames |
+| 2021-04-08 | 2.0 | Srishti | Updated steps with latest UI |
+## <h3 align="center"> Â© IBM Corporation 2023. All rights reserved. <h3/>
+Chat
+
+New Conversation
+
+🤓 Explain a complex thing
+
+Explain Artificial Intelligence so that I can explain it to my six-year-old child.
+
+
+🧠 Get suggestions and create new ideas
+
+Please give me the best 10 travel ideas around the world
+
+
+💭 Translate, summarize, fix grammar and more…
+
+Translate "I love you" French
+
+
+GPT-4o Mini
+Hello, how can I help you today?
+Explain Artificial Intelligence so that I can explain it to my six-year-old child.
+GPT-4o Mini
+Sure! Here’s a simple way to explain Artificial Intelligence (AI) to a six-year-old:
+
+You know how we use our brains to think, learn, and solve problems? Well, Artificial Intelligence, or AI, is like a computer’s brain!
+Imagine you have a toy robot. When you press a button, it can dance or talk to you. That’s a little bit like AI! It helps computers and machines to do things that usually need a human brain, like understanding what you say, playing games, or even helping doctors.
+Think of AI like a super-smart helper! It learns from everything it sees, kind of like how you learn from playing and talking with people. The more it practices, the better it gets! So, if you showed it how to play a game, it could learn to play it too!
+When we ask AI questions, it's like asking a really smart friend who knows a lot of things. It can help us find answers or tell us stories. 
+So, AI is just a way for computers to act smart and help us with all sorts of fun and useful things!
+
+How does that sound?
+GPT-4o Mini
+coin image
+10
+Upgrade
+
+
+
+Ask me anything...
+
+
+
+Powered by AITOPIA 
+Chat
+Ask
+Search
+Write
+Image
+ChatPDF
+Vision
+Full Page
