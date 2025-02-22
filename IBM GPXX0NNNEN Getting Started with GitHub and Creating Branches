@@ -1,0 +1,21 @@
+Getting Started with GitHub and Creating Branches
+Git is an open source project management application. Git is also a distributed version control system, meaning that each team member has a copy of the entire project, including the project’s revision history, on their computer. Each copy is known as a repository.
+
+GitHub is a popular online hosting service for Git repositories. With Git, you must use the command line to manage your project. But with GitHub, you can perform these tasks with the click of a mouse through GitHub’s graphical user interface (GUI). GitHub also provides useful collaboration features like wikis and bug tracking.
+
+In a typical GitHub workflow, updating a repository involves using GitHub’s branching system. All files in a GitHub repository reside in branches, or separate lines of development. Teams designate one branch as the main branch, the one that stores the finished, deployable code. Users create separate branches to work on new features or edit existing code, then integrate these changes into the main branch.
+
+Learning Objectives
+Describe GitHub
+Create a GitHub account
+Add a repository to GitHub
+Create and edit a file in a GitHub repository
+Upload and commit a file to a GitHub repository
+Create a branch of a GitHub repository
+Commit changes to a child branch
+Open a pull request
+Merge a pull request into the main branch
+What You’ll Need
+Just a web browser and a personal email account! Everything else is provided to you on GitHub.
+
+Okay you are ready to start!
